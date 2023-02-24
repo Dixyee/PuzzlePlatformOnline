@@ -19,6 +19,7 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -27,9 +28,9 @@ public:
 	UPROPERTY(EditAnywhere)
 		float PresingSpeed = 20;
 
-	UPROPERTY(EditAnywhere, Meta = (MakeEditWidget = true))
-		FVector TargetLocationPlate=FVector(0.f,0.f,-95.f);
-
+	UPROPERTY(EditAnywhere , Meta = (MakeEditWidget = true))
+		FVector TargetLocationPlate = FVector(0.f,0.f,-95.f);
+	
 
 private:
 	FVector GetDefaultLocation;
