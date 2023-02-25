@@ -25,28 +25,42 @@ void AMovingPlatform::BeginPlay()
 void AMovingPlatform::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	if (HasAuthority())
-	{	
-		
-		FVector Location = GetActorLocation(); // Point C 
-		float JourneyLenght = (GlobalTargetLocation - GlobalStartLocation).Size(); //The lenght From point B to A
-		float JourneyTravelled = (Location - GlobalStartLocation).Size(); //The lengt from point C to A
-		
-		// if the lenght of C to A is bigger than B to A	
-		//		then swap B and A
-
-		if (JourneyTravelled >= JourneyLenght) 
+	
+	if (ActiveTrigger > 0)
+	{
+		if (HasAuthority())
 		{
-			FVector Swap = GlobalStartLocation;
-			GlobalStartLocation = GlobalTargetLocation;
-			GlobalTargetLocation = Swap;
+
+			FVector Location = GetActorLocation(); // Point C 
+			float JourneyLenght = (GlobalTargetLocation - GlobalStartLocation).Size(); //The lenght From point B to A
+			float JourneyTravelled = (Location - GlobalStartLocation).Size(); //The lengt from point C to A
+
+			// if the lenght of C to A is bigger than B to A	
+			//		then swap B and A
+
+			if (JourneyTravelled >= JourneyLenght)
+			{
+				FVector Swap = GlobalStartLocation;
+				GlobalStartLocation = GlobalTargetLocation;
+				GlobalTargetLocation = Swap;
+			}
+
+			FVector Direction = (GlobalTargetLocation - GlobalStartLocation).GetSafeNormal();
+			Location += speed * DeltaTime * Direction;
+			SetActorLocation(Location);
+
 		}
-
-		FVector Direction = (GlobalTargetLocation - GlobalStartLocation).GetSafeNormal();
-		Location += speed * DeltaTime * Direction;
-		SetActorLocation(Location);
-
 	}
 
+}
+void AMovingPlatform::AddActiveTrigger()
+{
+	ActiveTrigger++;
+}
+void AMovingPlatform::RemoveActiveTrigger()
+{
+	if (ActiveTrigger > 0)
+	{
+		ActiveTrigger--;
+	}
 }
