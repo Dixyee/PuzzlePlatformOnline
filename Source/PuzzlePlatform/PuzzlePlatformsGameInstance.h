@@ -22,4 +22,7 @@ public:
 
 	UFUNCTION(Exec)
 		void Join(const FString& Adress);
+
+	UFUNCTION(Exec)
+		void PortNumber();
 };

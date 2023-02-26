@@ -24,7 +24,20 @@ void UPuzzlePlatformsGameInstance::Host()
 	UWorld* World = GetWorld();
 		if (!ensure(World != NULL)) return;
 
-	World->ServerTravel("/Game/ThirdPerson/Maps/MP_PP_Level1?lisen");
+	World->ServerTravel("/Game/ThirdPerson/Maps/MP_PP_Level1?listen");
+
+	
+}
+
+void UPuzzlePlatformsGameInstance::PortNumber()
+{
+	UEngine* Engine = GetEngine();
+	if (!ensure(Engine != NULL)) return;
+	
+	UWorld* World = GetWorld();
+	if (!ensure(World != NULL)) return;
+	FString PortNumber = FString::FromInt(GetWorld()->URL.Port);
+	Engine->AddOnScreenDebugMessage(0, 10, FColor::Green, FString::Printf(TEXT("Server Port : %s"), *PortNumber));
 }
 
 void UPuzzlePlatformsGameInstance::Join(const FString& Adress)
