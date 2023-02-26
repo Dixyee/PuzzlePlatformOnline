@@ -25,4 +25,7 @@ public:
 
 	UFUNCTION(Exec)
 		void PortNumber();
+private:
+	TSubclassOf<class UUserWidget> MenuClass;
+
 };
