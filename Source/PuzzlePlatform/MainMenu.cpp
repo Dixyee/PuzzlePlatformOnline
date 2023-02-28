@@ -2,6 +2,7 @@
 
 
 #include "MainMenu.h"
+#include "MenuInterface.h"
 #include "Components/Button.h"
 
 bool UMainMenu::Initialize()
@@ -11,11 +12,26 @@ bool UMainMenu::Initialize()
 
 	//TODO:Setup
 	if (!ensure(Host != nullptr)) return false;
-	Host->OnClicked.AddDynamic(this, &UMainMenu::HostServer) ;
-
+	Host->OnClicked.AddDynamic(this, &UMainMenu::HostServer);
+	
+	
 	return true;
+}
+void UMainMenu::SetMenuInterface(IMenuInterface* menuInterface)
+{
+	this->MenuInterface = menuInterface;
 }
 void UMainMenu::HostServer()
 {
-	UE_LOG(LogTemp,Warning,TEXT("SEEEEEEEEEEEEEEEEERvver"))
+	
+	if (MenuInterface != nullptr)
+	{
+		MenuInterface->Host();
+		UE_LOG(LogTemp, Warning, TEXT("TEST"));
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("NULL POINTER"));
+
+	}
 }
