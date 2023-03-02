@@ -31,5 +31,6 @@ public:
 		void PortNumber();
 private:
 	TSubclassOf<class UUserWidget> MenuClass;
+	class UMainMenu* Menu;
 
 };
