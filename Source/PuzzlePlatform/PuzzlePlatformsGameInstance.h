@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
 #include "MenuInterface.h"
+
 #include "PuzzlePlatformsGameInstance.generated.h"
 
 /**
@@ -21,16 +22,25 @@ public:
 	UFUNCTION(BlueprintCallable)
 		void LoadMenu();
 
-	UFUNCTION(Exec)
-		void Host();
+	UFUNCTION(BlueprintCallable)
+		void InGameLoadMenu();
 
 	UFUNCTION(Exec)
-		void Join(const FString& Adress);
+		void Host() override;
+
+	UFUNCTION(Exec)
+		void Join(const FString& Adress) override;
 
 	UFUNCTION(Exec)
 		void PortNumber();
+
+	virtual void LoadMainMenu() override;
 private:
 	TSubclassOf<class UUserWidget> MenuClass;
+	TSubclassOf<class UUserWidget> InGameMenuClass;
+	
+
 	class UMainMenu* Menu;
+
 
 };

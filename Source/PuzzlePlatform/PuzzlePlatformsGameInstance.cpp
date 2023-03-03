@@ -8,12 +8,21 @@
 #include "Blueprint/UserWidget.h"
 
 #include <PuzzlePlatform/MainMenu.h>
+#include <PuzzlePlatform/MenuWidget.h>
+
+
+
 UPuzzlePlatformsGameInstance::UPuzzlePlatformsGameInstance(const FObjectInitializer & ObjectInitializer)
 {
-	ConstructorHelpers::FClassFinder<UUserWidget> MenuBPClass(TEXT("/Game/ThirdPerson/MenuSystem/WBP_MainMenu"));
+	ConstructorHelpers::FClassFinder<UUserWidget> MenuBPClass(TEXT("/Game/ThirdPerson/MenuSystem/WBP_MainMenu")); //Map where the Widget will be created
 	if (!ensure(MenuBPClass.Class != NULL)) return;
 	
 	MenuClass = MenuBPClass.Class;
+
+	ConstructorHelpers::FClassFinder<UUserWidget> InGameMenu(TEXT("/Game/ThirdPerson/MenuSystem/WBP_Overlay"));
+	if (!ensure(InGameMenu.Class != NULL)) return;
+
+	InGameMenuClass = InGameMenu.Class;
 }
 void UPuzzlePlatformsGameInstance::Init()
 {
@@ -29,6 +38,16 @@ void UPuzzlePlatformsGameInstance::LoadMenu()
 	
 	Menu->Setup();
 	Menu->SetMenuInterface(this);
+}
+
+void UPuzzlePlatformsGameInstance::InGameLoadMenu()
+{
+	if (!ensure(InGameMenuClass != NULL)) return;
+	UMenuWidget* Overlay = CreateWidget<UMenuWidget>(this, InGameMenuClass);
+	if (!ensure(Overlay != NULL)) return;
+
+	Overlay->Setup();
+	Overlay->SetMenuInterface(this);
 }
 
 void UPuzzlePlatformsGameInstance::Host()
@@ -64,6 +83,10 @@ void UPuzzlePlatformsGameInstance::PortNumber()
 
 void UPuzzlePlatformsGameInstance::Join(const FString& Adress)
 {
+	if (Menu != nullptr)
+	{
+		Menu->Teardown();
+	}
 	UEngine* Engine = GetEngine();
 	if (!ensure(Engine != NULL)) return;
 
@@ -73,5 +96,13 @@ void UPuzzlePlatformsGameInstance::Join(const FString& Adress)
 	if (!ensure(PlayerController != NULL)) return;
 
 	PlayerController->ClientTravel(*Adress, ETravelType::TRAVEL_Absolute);
+}
+void UPuzzlePlatformsGameInstance::LoadMainMenu()
+{
+
+	APlayerController* PlayerController = GetFirstLocalPlayerController();
+	if (!ensure(PlayerController != NULL)) return;
+
+	PlayerController->ClientTravel("/Game/ThirdPerson/Maps/MP_MainMenu", ETravelType::TRAVEL_Absolute);
 }
 
