@@ -6,6 +6,7 @@
 #include "Engine/Engine.h"
 #include "UObject/ConstructorHelpers.h"
 #include "Blueprint/UserWidget.h"
+#include "OnlineSubsystem.h"
 
 #include <PuzzlePlatform/MainMenu.h>
 #include <PuzzlePlatform/MenuWidget.h>
@@ -26,8 +27,20 @@ UPuzzlePlatformsGameInstance::UPuzzlePlatformsGameInstance(const FObjectInitiali
 }
 void UPuzzlePlatformsGameInstance::Init()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Found class %s"), *MenuClass->GetName());
-
+	IOnlineSubsystem* Subsystem = IOnlineSubsystem::Get();
+	if (Subsystem != nullptr)
+	{
+		
+		UE_LOG(LogTemp, Warning, TEXT("Found subsystem %s"), *Subsystem->GetSubsystemName().ToString());
+		auto SessionInterface = Subsystem->GetSessionInterface();
+		if (SessionInterface.IsValid()) {
+			UE_LOG(LogTemp, Warning, TEXT("Found SesionInterface"));
+		}
+	}	
+	else
+	{ 
+		UE_LOG(LogTemp, Warning, TEXT("Didnt find subsystem"));
+	}
 }
 
 void UPuzzlePlatformsGameInstance::LoadMenu()
@@ -103,6 +116,20 @@ void UPuzzlePlatformsGameInstance::LoadMainMenu()
 	APlayerController* PlayerController = GetFirstLocalPlayerController();
 	if (!ensure(PlayerController != NULL)) return;
 
+	UWorld* World = GetWorld();
+	if (!ensure(World != NULL)) return;
+
+	UNetDriver* NetDriver = GetWorld()->GetNetDriver();
+	if (!ensure(NetDriver != NULL)) return;
+	/*
+	if (NetDriver->IsServer())
+	{
+		World->ServerTravel("/Game/ThirdPerson/Maps/MP_MainMenu");
+	}
+	else
+	{
+		PlayerController->ClientTravel("/Game/ThirdPerson/Maps/MP_MainMenu", ETravelType::TRAVEL_Absolute);
+	}*/
 	PlayerController->ClientTravel("/Game/ThirdPerson/Maps/MP_MainMenu", ETravelType::TRAVEL_Absolute);
 }
 

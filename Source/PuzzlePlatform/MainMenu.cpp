@@ -24,7 +24,11 @@ bool UMainMenu::Initialize()
 	
 	if (!ensure(CancelButton != nullptr)) return false;
 	CancelButton->OnClicked.AddDynamic(this, &UMainMenu::OpenMainMenu);
+
+	if (!ensure(QuitGameButton != nullptr)) return false;
+	QuitGameButton->OnClicked.AddDynamic(this, &UMainMenu::ExitTheGame);
 	
+
 	return true;
 }
 
@@ -70,4 +74,14 @@ void UMainMenu::OpenMainMenu()
 	if (!ensure(MainMenu != nullptr)) return;
 
 	MenuSwitcher->SetActiveWidget(MainMenu);
+}
+void UMainMenu::ExitTheGame() 
+{
+	UWorld* World = GetWorld();
+	if (!ensure(World != NULL)) return;
+
+	APlayerController* PlayerController = World->GetFirstPlayerController();
+	if (!ensure(PlayerController != NULL)) return;
+
+	PlayerController->ConsoleCommand("quit");
 }
