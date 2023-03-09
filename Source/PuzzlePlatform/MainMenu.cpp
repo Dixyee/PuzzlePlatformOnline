@@ -6,6 +6,8 @@
 #include "UObject/ConstructorHelpers.h"
 #include "Components/Button.h"
 #include "Components/WidgetSwitcher.h"
+#include "Components/TextBlock.h"
+
 
 #include "ServerRow.h"
 UMainMenu::UMainMenu(const FObjectInitializer& ObjectInitializer)
@@ -55,20 +57,33 @@ void UMainMenu::HostServer()
 
 	}
 }
+
+void UMainMenu::SetServerList(TArray<FString> ServerNames)
+{
+	UWorld* World = this->GetWorld();
+	if (!ensure(World != NULL)) return;
+	
+	ServerList->ClearChildren();
+
+	for (const FString& ServerName : ServerNames)
+	{
+		UServerRow* Row = CreateWidget<UServerRow>(this, ServerRowClass);
+		if (!ensure(Row != NULL)) return;
+
+		Row->ServerName->SetText(FText::FromString(ServerName));
+		ServerList->AddChild(Row);
+	}
+	
+}
+
 void UMainMenu::JoinServer()
 {
 	if (MenuInterface != nullptr)
 	{	
 		/*if (!ensure(ServerTextBox != nullptr)) return;
-		FString Adress = ServerTextBox->GetText().ToString();
-		MenuInterface->Join(Adress);*/
-		UWorld* World = this->GetWorld();
-		if (!ensure(World != NULL)) return;
-
-		UServerRow* Row = CreateWidget<UServerRow>(this, ServerRowClass);
-		if (!ensure(Row != NULL)) return;
-
-		ServerList->AddChild(Row);
+		FString Adress = ServerTextBox->GetText().ToString();*/
+		MenuInterface->Join("");
+		
 
 		UE_LOG(LogTemp, Warning, TEXT("Succes"));
 	}
@@ -84,6 +99,10 @@ void UMainMenu::OpenJoinMenu()
 	if (!ensure(JoinMenu != nullptr)) return;
 
 	MenuSwitcher->SetActiveWidget(JoinMenu);
+	if(MenuInterface !=nullptr)
+	{
+		MenuInterface->RefreshServerList();
+	}
 }
 void UMainMenu::OpenMainMenu()
 {

@@ -36,6 +36,7 @@ public:
 		void PortNumber();
 
 	virtual void LoadMainMenu() override;
+	virtual void RefreshServerList() override;
 private:
 	TSubclassOf<class UUserWidget> MenuClass;
 	TSubclassOf<class UUserWidget> InGameMenuClass;
