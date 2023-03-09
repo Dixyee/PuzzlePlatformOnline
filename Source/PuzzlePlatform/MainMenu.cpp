@@ -3,9 +3,18 @@
 
 #include "MainMenu.h"
 #include "MenuInterface.h"
-
+#include "UObject/ConstructorHelpers.h"
 #include "Components/Button.h"
 #include "Components/WidgetSwitcher.h"
+
+#include "ServerRow.h"
+UMainMenu::UMainMenu(const FObjectInitializer& ObjectInitializer)
+{
+	ConstructorHelpers::FClassFinder<UUserWidget> ServerRowBPClass(TEXT("/Game/ThirdPerson/MenuSystem/WBP_ServerRow")); 
+	if (!ensure(ServerRowBPClass.Class != NULL)) return;
+
+	ServerRowClass = ServerRowBPClass.Class;
+}
 
 bool UMainMenu::Initialize()
 {
@@ -50,9 +59,17 @@ void UMainMenu::JoinServer()
 {
 	if (MenuInterface != nullptr)
 	{	
-		if (!ensure(ServerTextBox != nullptr)) return;
+		/*if (!ensure(ServerTextBox != nullptr)) return;
 		FString Adress = ServerTextBox->GetText().ToString();
-		MenuInterface->Join(Adress);
+		MenuInterface->Join(Adress);*/
+		UWorld* World = this->GetWorld();
+		if (!ensure(World != NULL)) return;
+
+		UServerRow* Row = CreateWidget<UServerRow>(this, ServerRowClass);
+		if (!ensure(Row != NULL)) return;
+
+		ServerList->AddChild(Row);
+
 		UE_LOG(LogTemp, Warning, TEXT("Succes"));
 	}
 	else
