@@ -7,6 +7,7 @@
 #include "Components/EditableTextBox.h"
 #include "MainMenu.generated.h"
 
+
 /**
  * 
  */
@@ -19,6 +20,8 @@ public:
 	UMainMenu(const FObjectInitializer& ObjectInitializer);
 
 	void SetServerList(TArray<FString> ServerNames);
+
+	void SelectIndex(uint32 Index);
 
 protected:
 	virtual bool Initialize();
@@ -66,4 +69,6 @@ private:
 
 	UFUNCTION()
 		void ExitTheGame();
+
+	TOptional<uint32> SelectedIndex;
 };
