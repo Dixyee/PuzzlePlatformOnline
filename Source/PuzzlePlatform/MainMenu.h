@@ -64,10 +64,26 @@ private:
 		class UWidget* MainMenu;
 
 	UPROPERTY(meta = (BindWidget))
+		class UWidget* HostMenu;
+
+	UPROPERTY(meta = (BindWidget))
+		class UEditableTextBox* ServerHostName;
+
+	UPROPERTY(meta = (BindWidget))
+		class UButton* ConfirmHostMenu;
+
+	UPROPERTY(meta = (BindWidget))
+		class UButton* CancelHostMenu;
+
+	UPROPERTY(meta = (BindWidget))
 		class UPanelWidget* ServerList;
 	
 	UFUNCTION()
 		void HostServer();
+
+	UFUNCTION()
+		void OpenHostMenu();
+
 	UFUNCTION()
 		void OpenJoinMenu();
 
