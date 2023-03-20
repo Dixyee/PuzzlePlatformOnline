@@ -193,7 +193,7 @@ void UPuzzlePlatformsGameInstance::OnCreateSessionComplete(FName SessionName, bo
 	UWorld* World = GetWorld();
 		if (!ensure(World != NULL)) return;
 
-	World->ServerTravel("/Game/ThirdPerson/Maps/MP_PP_Level1?listen");
+	World->ServerTravel("/Game/ThirdPerson/Maps/MP_Lobby?listen");
 
 	
 }
