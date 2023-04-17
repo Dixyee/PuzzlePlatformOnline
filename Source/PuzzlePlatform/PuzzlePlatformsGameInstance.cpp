@@ -13,7 +13,7 @@
 #include <PuzzlePlatform/MainMenu.h>
 #include <PuzzlePlatform/MenuWidget.h>
 
-const static FName SESSION_NAME = TEXT("My Session Game");
+const static FName SESSION_NAME = TEXT("GameSession");
 const static FName SESSION_NAME_SETING_KEY = TEXT("ServerName");
 
 
@@ -50,6 +50,11 @@ void UPuzzlePlatformsGameInstance::Init()
 	else
 	{ 
 		UE_LOG(LogTemp, Warning, TEXT("Didnt find subsystem"));
+	}
+
+	if (GEngine != nullptr)
+	{
+		GEngine->OnNetworkFailure().AddUObject(this,&UPuzzlePlatformsGameInstance::OnNetworkFailure);
 	}
 }
 
@@ -145,7 +150,10 @@ void UPuzzlePlatformsGameInstance::OnDestroySessionComplete(FName SessionName, b
 		CreateSession();
 	}
 }
-
+void UPuzzlePlatformsGameInstance::OnNetworkFailure(UWorld* World, UNetDriver* NetDriver, ENetworkFailure::Type FailureType, const FString& ErrorString)
+{
+	LoadMainMenu();
+}
 
 void UPuzzlePlatformsGameInstance::CreateSession()
 {
@@ -161,7 +169,7 @@ void UPuzzlePlatformsGameInstance::CreateSession()
 			SessionSettings.bIsLANMatch = false;
 		}
 		
-		SessionSettings.NumPublicConnections = 2;
+		SessionSettings.NumPublicConnections = 5;
 		SessionSettings.bShouldAdvertise = true;
 		SessionSettings.bUsesPresence = true;
 		SessionSettings.bUseLobbiesIfAvailable = true;
@@ -239,6 +247,13 @@ void UPuzzlePlatformsGameInstance::OnJoinSessionComplete(FName SessionName, EOnJ
 	if (!ensure(PlayerController != NULL)) return;
 
 	PlayerController->ClientTravel(*Adress, ETravelType::TRAVEL_Absolute);
+}
+void UPuzzlePlatformsGameInstance::StartSession()
+{
+	if (SessionInterface.IsValid())
+	{
+		SessionInterface->StartSession(SESSION_NAME);
+	}
 }
 void UPuzzlePlatformsGameInstance::LoadMainMenu()
 {

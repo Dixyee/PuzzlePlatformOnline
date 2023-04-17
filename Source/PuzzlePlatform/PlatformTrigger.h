@@ -40,7 +40,10 @@ private:
 	class UBoxComponent* TrigerVolume;
 
 	UPROPERTY(EditAnywhere)
-		TArray<class AMovingPlatform*> PlatformsToTrigger;
+		TArray<class AMovingPlatform*> PlatformsToTrigger; // Array of trigered platmorms
+
+	UPROPERTY(EditAnywhere)
+		TArray<class AMyOpenDoor*> DoorsToTrigger;
 
 	UFUNCTION()
 		void OnOverLapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,

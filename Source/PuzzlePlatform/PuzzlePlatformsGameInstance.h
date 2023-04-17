@@ -35,6 +35,8 @@ public:
 	UFUNCTION(Exec)
 		void PortNumber();
 
+	void StartSession();
+
 	virtual void LoadMainMenu() override;
 	virtual void RefreshServerList() override;
 private:
@@ -49,6 +51,7 @@ private:
 	void OnCreateSessionComplete(FName SessionName, bool Success);
 	void OnDestroySessionComplete(FName SessionName, bool Success);
 	void OnFindSessionComplete(bool Success);
+	void OnNetworkFailure(UWorld* World, UNetDriver* NetDriver, ENetworkFailure::Type FailureType, const FString& ErrorString);
 
 	void OnJoinSessionComplete(FName SessionName, EOnJoinSessionCompleteResult::Type Result);
 

@@ -4,7 +4,7 @@
 #include "PlatformTrigger.h"
 #include "Components/BoxComponent.h"
 
-
+#include "MyOpenDoor.h"
 #include "MovingPlatform.h"
 
 // Sets default values
@@ -73,6 +73,11 @@ void APlatformTrigger::OnOverLapBegin(UPrimitiveComponent* OverlappedComponent, 
 	{
 		Platform->AddActiveTrigger();
 	}
+
+	for (AMyOpenDoor* Doors : DoorsToTrigger)
+	{
+		Doors->AddActiveTrigger();
+	}
 }
 
 void APlatformTrigger::OnOverLapEnds(UPrimitiveComponent* OverlappedComp,AActor* OtherActor,UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
@@ -81,6 +86,10 @@ void APlatformTrigger::OnOverLapEnds(UPrimitiveComponent* OverlappedComp,AActor*
 	for (AMovingPlatform * Platform : PlatformsToTrigger)
 	{
 		Platform->RemoveActiveTrigger();
+	}
+	for (AMyOpenDoor* Doors : DoorsToTrigger)
+	{
+		Doors->RemoveActiveTrigger();
 	}
 }
 
